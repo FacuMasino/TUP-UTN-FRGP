@@ -9,7 +9,7 @@ trabajada y listar por pantalla el sueldo que le corresponda.
 */
 
 int main() {
-  int horas, valorHora, salir;
+  int horas, valorHora;
 
   cout << "Ingrese la cantidad de horas trabajadas:";
   cin >> horas;
