@@ -100,11 +100,8 @@ int main(void) {
 				break;
 		}
 		
-		// C Calcular total de transacciones
-		// Excepto que se ingrese nCliente 0
-		//if(nCliente != 0) {
-			totalTxn++;
-		//}
+		totalTxn++;
+
 		cout << "Nro. Cliente (100 al 1200): ";
 		cin >> nCliente;
 	}
