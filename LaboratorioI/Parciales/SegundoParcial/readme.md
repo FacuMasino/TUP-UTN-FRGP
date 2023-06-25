@@ -22,13 +22,14 @@ El fin de la carga de datos se indica con un ID de venta igual a cero.
 
 ### Aclaraciones:
 Los géneros literarios son los que se detallan a continuación:
-1: Terror
-2: Biografía
-3: Novela
-4: Ciencia ficción
-5: Historia
-6: Ciencia
-7: Salud
+- 1: Terror
+- 2: Biografía
+- 3: Novela
+- 4: Ciencia ficción
+- 5: Historia
+- 6: Ciencia
+- 7: Salud
 
 Los IDs de sucursales son los siguientes: 1000, 2000, 3000 y 4000.
+
 Sólo habrá un autor que haya recaudado la mayor cantidad en concepto de venta de libros.
