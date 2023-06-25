@@ -6,7 +6,6 @@ Vector → {1 3 9 1 4 6 2 0 5 7 }, quedará → {1 3 1 4 6 2 0 5 7}
 Nota: No mostrar el último elemento del vector.
 */
 #include <iostream>
-#include "utilidades.h"
 using namespace std;
 
 int main(void)
