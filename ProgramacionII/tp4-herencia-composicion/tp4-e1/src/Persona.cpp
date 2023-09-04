@@ -3,22 +3,6 @@
 
 #include <iostream>
 
-/* Persona::Persona(char nom[29] = "pablito", char apell[29] = "lezcano",
-                 char dir[29] = "Obelisco",
-                 char correo[29] = "no@no.com" char tel[29] = "01100000",
-                 int doc = 1000000, int diaNac = 10, int mesNac = 10,
-                 int anioNac = 2010) {
-    strcpy(nombre, nom);
-    strcpy(apellido, apell);
-    strcpy(direccion, dir);
-    strcpy(email, correo);
-    strcpy(telefono, tel);
-    DNI = doc;
-    fechaNacimiento.setDia(diaNac);
-    fechaNacimiento.setMes(mesNac);
-    fechaNacimiento.setAnio(anioNac)
-} */
-
 void Persona::Cargar() {
     std::cout << "NOMBRE: ";
     cargarCadena(nombre, 29);

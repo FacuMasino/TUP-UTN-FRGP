@@ -11,7 +11,6 @@ protected:
     Fecha fechaNacimiento;
 
 public:
-    // Persona(char nom[29], );
     void Cargar();
     void Mostrar();
     void setDNI(int d) { DNI = d; }

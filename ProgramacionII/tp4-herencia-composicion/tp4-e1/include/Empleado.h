@@ -6,16 +6,16 @@ private:
     // propiedades
     int _categoria;
     float _sueldo;
-    Fecha fechaIngreso;
+    Fecha _fechaIngreso;
 
 public:
     // metodos
 
-    Empleado(int cat = 1, float sueldo = 1000, int dia = 1, int mes = 1,
-             int anio = 2010);
+    Empleado(int cat = 1, float sueldo = 1000,
+             Fecha _fIngreso = Fecha(1, 1, 2010));
 
     void setCategoria(int cat);
-    void setSueldo(float s);
+    void setSueldo(float sueldo);
     void setDia(int d);
     void setMes(int m);
     void setAnio(int a);
