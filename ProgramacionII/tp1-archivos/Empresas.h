@@ -10,7 +10,7 @@ municipio al que pertenece (1 a 135) Estado (bool)
 
 class Empresas {
 public:
-    Empresas(int number = 1, const char *name = "Test", int employesQty = 10,
+    Empresas(int number = 0, const char *name = "Test", int employesQty = 10,
              int nCat = 1, int nTown = 1, bool state = true);
 
     void setNumber(int n);

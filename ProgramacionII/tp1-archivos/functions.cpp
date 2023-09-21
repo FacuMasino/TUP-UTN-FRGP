@@ -160,19 +160,20 @@ bool addRegister(Empresas reg[], int total) {
 /// @return verdadero si el nro de empresa existe
 bool numberExists(int n, Empresas *pReg, int regQty) {
     Empresas reg;
-    FILE *pFile = fopen("Empresas.dat", "rb");
-    if (pFile == NULL) return false;
-    // Buscar en el archivo
-    while (fread(&reg, sizeof(Empresas), 1, pFile)) {
-        if (reg.getNumber() == n) {
-            fclose(pFile);
-            return true;
-        }
-    }
+    FILE *pFile;
     // Buscar en el vector, si se le paso a la funcion
     if (pReg != nullptr) {
         for (int i = 0; i < regQty; i++) {
             if (pReg[i].getNumber() == n) return true;
+        }
+    }
+    // Buscar en el archivo
+    pFile = fopen("Empresas.dat", "rb");
+    if (pFile == NULL) return false;
+    while (fread(&reg, sizeof(Empresas), 1, pFile)) {
+        if (reg.getNumber() == n) {
+            fclose(pFile);
+            return true;
         }
     }
     fclose(pFile);

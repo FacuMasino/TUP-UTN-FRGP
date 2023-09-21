@@ -7,8 +7,8 @@ using namespace std;
 int main() {
     /// setlocale(LC_ALL, "es-ES.UTF-8");
     // loadRegister();
-    showList();
-    // loadRegister(2);
+    // showList();
+    loadRegister(2);
     system("pause");
     return 0;
 }
