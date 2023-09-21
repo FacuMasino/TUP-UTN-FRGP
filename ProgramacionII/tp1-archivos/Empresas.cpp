@@ -14,7 +14,7 @@ Empresas::Empresas(int number, const char *name, int employesQty, int nCat,
 }
 
 void Empresas::setNumber(int n) { _number = n; }
-void Empresas::setName(char *n) { strcpy(n, _name); }
+void Empresas::setName(char *n) { strcpy(_name, n); }
 void Empresas::setQty(int n) { _qty = n; }
 void Empresas::setCategory(int n) { _category = n; }
 void Empresas::setTown(int n) { _townNumber = n; }

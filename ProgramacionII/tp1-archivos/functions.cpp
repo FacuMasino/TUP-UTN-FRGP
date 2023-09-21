@@ -67,6 +67,7 @@ void loadRegister(int q) {
             pEmpresas[i].setNumber(companyN);
             pEmpresas[i].setName(companyName);
             pEmpresas[i].setQty(employeesQty);
+            pEmpresas[i].setCategory(catN);
             pEmpresas[i].setTown(townN);
             pEmpresas[i].setState(state);
         }
@@ -107,6 +108,7 @@ void loadRegister() {
 
     reg.setNumber(companyN);
     reg.setName(companyName);
+    reg.setCategory(catN);
     reg.setQty(employeesQty);
     reg.setTown(townN);
     reg.setState(state);
