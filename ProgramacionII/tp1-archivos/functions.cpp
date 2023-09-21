@@ -5,6 +5,31 @@
 
 using namespace std;
 
+int showMenu() {
+    int option = -1;
+    while (option == -1) {
+        system("cls");
+        cout << setw(10) << setfill('#') << "" << setfill(' ');
+        cout << " MENU ";
+        cout << setw(10) << setfill('#') << "" << setfill(' ') << endl;
+        cout << " 1 - Cargar 1 registro" << endl;
+        cout << " 2 - Cargar X registros" << endl;
+        cout << " 3 - Mostrar registros" << endl;
+        cout << " 0 - Salir" << endl;
+        cout << setw(26) << setfill('#') << "" << setfill(' ') << endl;
+        cout << "Ingrese una opcion: ";
+        cin >> option;
+        if (option < 0 || option > 3) {
+            cout << "Opcion incorrecta!" << endl;
+            system("pause");
+            option = -1;
+        }
+        system("cls");
+    }
+
+    return option;
+}
+
 // Carga un vector de registros usando memoria dinamica
 void loadRegister(int q) {
     int companyN, employeesQty, catN, townN;
@@ -117,6 +142,7 @@ void showList() {
             cout << setw(10) << reg.getTown();
             cout << endl;
         }
+        cout << endl;
     } else {
         cout << "No se pudo leer el archivo Empresas.dat"
              << "O no existe en el directorio." << endl;

@@ -2,6 +2,7 @@
 #define FUNCTIONS_INCLUDED
 #include "Empresas.h"
 
+int showMenu();
 void loadRegister(int q);
 void loadRegister();
 bool addRegister(Empresas reg);
