@@ -26,3 +26,13 @@ int Empresas::getQty() { return _qty; }
 int Empresas::getCategory() { return _category; }
 int Empresas::getTown() { return _townNumber; }
 bool Empresas::getState() { return _state; }
+
+void Empresas::loadData(int number, char *name, int employesQty, int nCat,
+                        int nTown, bool state) {
+    setNumber(number);
+    setName(name);
+    setQty(employesQty);
+    setCategory(nCat);
+    setTown(nTown);
+    setState(state);
+}

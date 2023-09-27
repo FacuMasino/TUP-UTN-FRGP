@@ -27,6 +27,9 @@ public:
     int getTown();
     bool getState();
 
+    void loadData(int number, char *name, int employesQty, int nCat, int nTown,
+                  bool state);
+
 private:
     int _number;
     char _name[30];
