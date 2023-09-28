@@ -3,9 +3,13 @@
 #include "EmpresasFile.h"
 class EmpresasManager {
 public:
-    EmpresasManager();
-    void loadRegister(int qty = 0);
+    void loadRegister(int qty = 1);
+    void showList();
+    void showCompanyQtyByTown();
+    void showCompanyGreaterThan(int n);
+    void showMostEmployedCat();
 
 private:
+    void loadString(char *word, int size);
     EmpresasFile _file;
 };

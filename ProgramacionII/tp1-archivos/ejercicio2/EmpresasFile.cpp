@@ -1,3 +1,7 @@
+#include <cstring>
+#include <iostream>
+using namespace std;
+
 #include "EmpresasFile.h"
 
 EmpresasFile::EmpresasFile() { strcpy(_fileName, "Empresas.dat"); }

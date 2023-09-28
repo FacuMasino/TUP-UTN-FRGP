@@ -1,8 +1,6 @@
 #pragma once
 
-#include <iostream>
-
-#include "Empresas.h";
+#include "Empresas.h"
 
 class EmpresasFile {
 public:
