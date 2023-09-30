@@ -76,6 +76,35 @@ void EmpresasManager::disableCompany() {
     }
 }
 
+void EmpresasManager::changeCompanyCat() {
+    int companyN, regPos, newCategory;
+    // pedir nro, buscar pos, leer pos, obtener estado
+    // pedir nueva cat, cambiar cat, actualizar cat
+    cout << "Ingrese el nro de empresa: ";
+    cin >> companyN;
+    regPos = _file.searchPosByNumber(companyN);
+    if (regPos == -1) {
+        cout
+            << "Ocurrio un error al leer el archivo o el registro no existe.\n";
+        return;
+    }
+    Empresas reg = _file.readFile(regPos);
+    if (!reg.getState()) {
+        cout << "El nro de empresa ingresado no se encuentra activo.\n";
+        return;
+    }
+
+    cout << "Ingrese el nro de la categoria nueva [1-80]: ";
+    cin >> newCategory;
+    reg.setCategory(newCategory);
+    bool success = _file.updateFile(reg, regPos);
+    if (success) {
+        cout << "Categoria modificada con exito!\n";
+    } else {
+        cout << "Ocurrio un error al modificar el registro.\n";
+    }
+}
+
 void EmpresasManager::showList() {
     int totalReg = _file.getTotalRegisters();
     int listCount = 0;
@@ -84,7 +113,7 @@ void EmpresasManager::showList() {
         return;
     }
     cout << left;
-    cout << setfill('-') << setw(68) << "" << setfill(' ') << endl;
+    cout << setfill('-') << setw(70) << "" << setfill(' ') << endl;
     cout << setw(4) << "ID";
     cout << setw(30) << "NOMBRE DE EMPRESA";
     cout << setw(10) << "EMPLEADOS";
@@ -92,7 +121,7 @@ void EmpresasManager::showList() {
     cout << setw(10) << "MUNICIPIO";
     cout << setw(10) << "ESTADO";
     cout << endl;
-    cout << setfill('-') << setw(68) << "" << setfill(' ') << endl;
+    cout << setfill('-') << setw(70) << "" << setfill(' ') << endl;
 
     for (int i = 0; i < totalReg; i++) {
         Empresas reg = _file.readFile(i);
@@ -100,19 +129,19 @@ void EmpresasManager::showList() {
         cout << left;
         if (reg.getNumber() == 0) {
             cout << "No se pudo leer el registro # " << i + 1 << endl;
-        } else if (reg.getState()) {
+        } else {
             cout << setw(4) << reg.getNumber();
             cout << setw(30) << reg.getName();
             cout << setw(10) << reg.getQty();
             cout << setw(10) << reg.getCategory();
             cout << setw(10) << reg.getTown();
-            cout << setw(10) << reg.getState();
+            cout << setw(10) << (reg.getState() ? "Activa" : "Inactiva");
             cout << endl;
             listCount++;
         }
     }
 
-    if (listCount == 0) cout << "\nNo hay empresas activas para mostrar.\n";
+    if (listCount == 0) cout << "\nNo hay empresas para mostrar.\n";
 }
 
 void EmpresasManager::loadString(char *word, int size) {

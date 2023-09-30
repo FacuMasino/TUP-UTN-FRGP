@@ -18,6 +18,7 @@ int main() {
                 system("pause");
                 break;
             case 3:
+                Manager.changeCompanyCat();
                 system("pause");
                 break;
             case 4:
