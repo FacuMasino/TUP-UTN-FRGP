@@ -51,8 +51,34 @@ void EmpresasManager::loadRegister(int qty) {
     }
 }
 
+void EmpresasManager::disableCompany() {
+    int companyN;
+    cout << "Ingrese el nro de empresa para dar de baja: ";
+    cin >> companyN;
+    int regPos = _file.searchPosByNumber(companyN);
+    Empresas reg = _file.readFile(regPos);
+    if (reg.getNumber() == 0 || regPos < 0) {
+        cout << "El nro de empresa ingresado no existe o no se pudo obtener el "
+                "registro."
+             << endl;
+        return;
+    } else if (!reg.getState()) {
+        cout << "El nro de empresa ingresado ya fue dado de baja previamente."
+             << endl;
+        return;
+    }
+    reg.setState(false);  // Baja logica
+
+    if (_file.updateFile(reg, regPos)) {
+        cout << "Baja efectuada correctamente! " << endl;
+    } else {
+        cout << "Ocurrio un error, la baja no se pudo realizar." << endl;
+    }
+}
+
 void EmpresasManager::showList() {
     int totalReg = _file.getTotalRegisters();
+    int listCount = 0;
     if (totalReg == 0) {
         cout << "No hay registros para mostrar." << endl;
         return;
@@ -64,6 +90,7 @@ void EmpresasManager::showList() {
     cout << setw(10) << "EMPLEADOS";
     cout << setw(10) << "CATEGORIA";
     cout << setw(10) << "MUNICIPIO";
+    cout << setw(10) << "ESTADO";
     cout << endl;
     cout << setfill('-') << setw(68) << "" << setfill(' ') << endl;
 
@@ -73,15 +100,19 @@ void EmpresasManager::showList() {
         cout << left;
         if (reg.getNumber() == 0) {
             cout << "No se pudo leer el registro # " << i + 1 << endl;
-        } else {
+        } else if (reg.getState()) {
             cout << setw(4) << reg.getNumber();
             cout << setw(30) << reg.getName();
             cout << setw(10) << reg.getQty();
             cout << setw(10) << reg.getCategory();
             cout << setw(10) << reg.getTown();
+            cout << setw(10) << reg.getState();
             cout << endl;
+            listCount++;
         }
     }
+
+    if (listCount == 0) cout << "\nNo hay empresas activas para mostrar.\n";
 }
 
 void EmpresasManager::loadString(char *word, int size) {

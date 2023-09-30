@@ -14,26 +14,14 @@ int main() {
                 Manager.loadRegister();
                 break;
             case 2:
-                int nReg;
-                cout << "Ingrese la cantidad de registros: ";
-                cin >> nReg;
-                system("cls");
-                Manager.loadRegister(nReg);
+                Manager.disableCompany();
+                system("pause");
                 break;
             case 3:
-                Manager.showList();
                 system("pause");
                 break;
             case 4:
-                Manager.showCompanyQtyByTown();
-                system("pause");
-                break;
-            case 5:
-                Manager.showCompanyGreaterThan(200);
-                system("pause");
-                break;
-            case 6:
-                Manager.showMostEmployedCat();
+                Manager.showList();
                 system("pause");
                 break;
             default:

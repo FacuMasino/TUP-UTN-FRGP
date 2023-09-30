@@ -4,6 +4,7 @@
 class EmpresasManager {
 public:
     void loadRegister(int qty = 1);
+    void disableCompany();
     void showList();
     void showCompanyQtyByTown();
     void showCompanyGreaterThan(int n);

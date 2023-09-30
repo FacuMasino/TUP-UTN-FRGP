@@ -57,6 +57,15 @@ bool EmpresasFile::writeFile(Empresas reg[], int total) {
     return totalWritten == total ? true : false;
 }
 
+bool EmpresasFile::updateFile(Empresas reg, int pos) {
+    FILE *pFile = fopen(_fileName, "rb+");
+    if (pFile == NULL) return false;
+    fseek(pFile, pos * sizeof(Empresas), SEEK_SET);
+    bool success = fwrite(&reg, sizeof(Empresas), 1, pFile);
+    fclose(pFile);
+    return success;
+}
+
 bool EmpresasFile::searchNumber(int n) {
     int totalReg = getTotalRegisters();
     if (totalReg == 0) return false;
@@ -64,4 +73,22 @@ bool EmpresasFile::searchNumber(int n) {
         if (readFile(i).getNumber() == n) return true;
     }
     return false;
+}
+
+int EmpresasFile::searchPosByNumber(int n) {
+    Empresas reg;
+    int totalReg = getTotalRegisters();
+    FILE *pFile = fopen(_fileName, "rb");
+    if (pFile == NULL) return -1;
+    for (int i = 0; i < totalReg; i++) {
+        if (fread(&reg, sizeof(Empresas), 1, pFile) == 0) {
+            fclose(pFile);
+            return -1;
+        } else if (reg.getNumber() == n) {
+            fclose(pFile);
+            return i;
+        }
+    }
+    fclose(pFile);
+    return -1;
 }

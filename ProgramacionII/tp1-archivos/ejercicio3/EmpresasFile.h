@@ -11,7 +11,9 @@ public:
     int getTotalRegisters();
     bool writeFile(Empresas reg);
     bool writeFile(Empresas reg[], int total);
+    bool updateFile(Empresas reg, int pos);
     bool searchNumber(int n);
+    int searchPosByNumber(int n);
 
 private:
     char _fileName[30];
