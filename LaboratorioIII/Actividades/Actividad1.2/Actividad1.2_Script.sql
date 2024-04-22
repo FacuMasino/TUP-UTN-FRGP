@@ -51,10 +51,9 @@ CREATE TABLE instructores_cursos
 (
 	id_instructor_curso int NOT NULL,
 	id_curso int NOT NULL,
-	id_usuario int NOT NULL,
-	PRIMARY KEY (id_instructor_curso),
+	PRIMARY KEY (id_instructor_curso, id_curso),
 	FOREIGN KEY (id_curso) REFERENCES cursos(id_curso),
-	FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+	FOREIGN KEY (id_instructor_curso) REFERENCES usuarios(id_usuario)
 )
 GO
 CREATE TABLE inscripciones

@@ -1,9 +1,9 @@
 -- ##################### SCRIPT ACTIVIDAD 1.1 ##################### 
 USE master
 GO
-CREATE DATABASE CURSOS_UNIV_TEST2
+CREATE DATABASE CURSOS_UNIV_TEST3
 GO
-USE CURSOS_UNIV_TEST2
+USE CURSOS_UNIV_TEST3
 GO
 CREATE TABLE cursos
 (
@@ -136,10 +136,9 @@ CREATE TABLE instructores_cursos
 (
 	id_instructor_curso int NOT NULL,
 	id_curso int NOT NULL,
-	id_usuario int NOT NULL,
-	PRIMARY KEY (id_instructor_curso),
+	PRIMARY KEY (id_instructor_curso, id_curso),
 	FOREIGN KEY (id_curso) REFERENCES cursos(id_curso),
-	FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+	FOREIGN KEY (id_instructor_curso) REFERENCES usuarios(id_usuario)
 )
 GO
 CREATE TABLE inscripciones
@@ -181,7 +180,7 @@ CREATE TABLE resenias
 (
 	id_resenia int NOT NULL,
 	id_inscripcion int NOT NULL UNIQUE,
-	comentario varchar(100) NOT NULL,
+	comentario text NOT NULL,
 	FOREIGN KEY (id_inscripcion) REFERENCES inscripciones(id_inscripcion),
 	PRIMARY KEY (id_resenia)
 )
