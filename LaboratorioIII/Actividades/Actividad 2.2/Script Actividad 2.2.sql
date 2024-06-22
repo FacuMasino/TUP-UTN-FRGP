@@ -146,3 +146,20 @@ FROM Idiomas AS Idio
 	LEFT JOIN Idiomas_x_Curso AS IxC
 	ON Idio.ID = IxC.IDIdioma
 WHERE IxC.IDCurso IS NULL
+
+-- 14 Listado con nombres de idioma que figuren como audio de algún curso.
+-- Sin repeticiones.
+SELECT DISTINCT Idiomas.Nombre "Idioma con audio"
+FROM Idiomas
+	INNER JOIN Idiomas_x_Curso AS IxC
+	ON Idiomas.ID = IxC.IDIdioma
+	INNER JOIN FormatosIdioma AS Fmt
+	ON IxC.IDFormatoIdioma = Fmt.ID
+WHERE Fmt.Nombre = 'Audio'
+
+-- Alternativa
+SELECT DISTINCT Idiomas.Nombre "Idioma con audio"
+FROM Idiomas
+	INNER JOIN Idiomas_x_Curso AS IxC
+	ON Idiomas.ID = IxC.IDIdioma
+WHERE IxC.IDFormatoIdioma = 2
