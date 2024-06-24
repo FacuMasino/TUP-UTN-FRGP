@@ -163,3 +163,121 @@ FROM Idiomas
 	INNER JOIN Idiomas_x_Curso AS IxC
 	ON Idiomas.ID = IxC.IDIdioma
 WHERE IxC.IDFormatoIdioma = 2
+
+-- 15 Listado con nombres y apellidos de todos los usuarios y el nombre del
+-- país en el que nacieron. Listar todos los países indistintamente si no
+-- tiene usuarios relacionados.
+
+SELECT
+	DP.Nombres,
+	DP.Apellidos,
+	P.Nombre PaisNacimiento
+from Usuarios U
+	inner join Datos_Personales DP
+	on U.ID = DP.ID
+	inner join Localidades Loc
+	on Loc.Id = DP.IDLocalidad
+	right join Paises P
+	on P.ID = Loc.IDPais
+
+-- 16 Listado con nombre de curso, fecha de estreno y nombres de usuario de
+-- todos los inscriptos. Listar todos los nombres de usuario indistintamente
+-- si no se inscribieron a ningún curso.
+
+SELECT
+	C.Nombre NombreCurso,
+	C.Estreno,
+	U.NombreUsuario
+from Cursos C
+	inner join Inscripciones Insc
+	on Insc.IDCurso = C.ID
+	right join Usuarios U
+	on U.ID = Insc.IDUsuario
+Order By C.Nombre Desc
+
+-- 17 Listado con nombre de usuario, apellido, nombres, género, fecha de
+-- nacimiento y mail de todos los usuarios que no cursaron ningún curso.
+
+Select
+	U.NombreUsuario,
+	DP.Apellidos,
+	DP.Nombres,
+	DP.Genero,
+	DP.Nacimiento,
+	DP.Email
+from Usuarios U
+	inner join Datos_Personales DP
+	on U.ID = DP.ID
+	left join Inscripciones Insc
+	on Insc.IDUsuario = U.ID
+Where Insc.ID Is NULL
+
+-- 18 Listado con nombre y apellido, nombre del curso, puntaje otorgado y
+-- texto de la reseña. Sólo de aquellos usuarios que hayan realizado una
+-- reseña inapropiada.
+
+Select
+	DP.Nombres,
+	DP.Apellidos,
+	C.Nombre,
+	R.Puntaje,
+	R.Observaciones
+from Datos_Personales DP
+	inner join Usuarios U
+	on U.ID = DP.ID
+	inner join inscripciones Insc
+	on Insc.IDUsuario = U.ID
+	inner join Cursos C
+	on C.ID = Insc.IDCurso
+	inner join Reseñas R
+	on R.IDInscripcion = Insc.ID
+Where R.Inapropiada = 1
+
+-- 19 Listado con nombre del curso, costo de cursado, costo de certificación,
+-- nombre del idioma y nombre del tipo de idioma de todos los cursos cuya
+-- fecha de estreno haya sido antes del año actual. Ordenado por nombre del
+-- curso y luego por nombre de tipo de idioma. Ambos ascendentemente.
+
+Select
+	C.Nombre,
+	C.CostoCurso,
+	C.CostoCertificacion,
+	ID.Nombre,
+	FmtID.Nombre
+from Cursos C
+	inner join Idiomas_x_Curso IxC
+	on IxC.IDCurso = C.ID
+	inner join Idiomas ID
+	on ID.ID = IxC.IDIdioma
+	inner join FormatosIdioma FmtID
+	on FmtID.ID = IxC.IDFormatoIdioma
+Order By C.Nombre, FmtId.Nombre Asc 
+
+-- 20 Listado con nombre del curso y todos los importes de los pagos relacionados.
+
+Select
+	C.Nombre,
+	P.Importe
+from Cursos C
+	inner join Inscripciones Insc
+	on Insc.IDCurso = C.ID
+	inner join Pagos P
+	on P.IDInscripcion = Insc.ID
+
+-- 21 Listado con nombre de curso, costo de cursado y una leyenda que indique
+-- "Costoso" si el costo de cursado es mayor a $15000, "Accesible" si el costo
+-- de cursado está entre $2500 y $15000, "Barato" si el costo está entre $1 y
+-- $2499 y "Gratis" si el costo es $0.
+
+Select
+	C.Nombre,
+	C.CostoCurso,
+	Case When C.CostoCurso > 15000
+	Then 'Costoso'
+	When C.CostoCurso BETWEEN 2500 And 15000
+	Then 'Accesible'
+	When C.CostoCurso BETWEEN 1 And 2499
+	Then 'Barato'
+	Else 'Gratis'
+	End as Clasificacion
+From Cursos C

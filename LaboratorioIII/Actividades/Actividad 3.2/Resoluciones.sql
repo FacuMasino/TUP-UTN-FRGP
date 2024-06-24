@@ -137,4 +137,196 @@ Go
 -- de la inscripción. En caso de falla mostrar un mensaje aclaratorio de lo
 -- contrario registrar la certificación.
 
+Create or Alter Trigger tr_Registrar_Certificacion
+on Certificaciones After Insert
+AS
+BEGIN
+	Begin TRY
+		BEGIN TRAN
+			Declare @TotalPago money
+			Declare @IdInscripcion bigint = (Select IdInscripcion from inserted)
+			Declare @CostoInscripcion money = (Select Costo from Inscripciones
+											   Where ID = @IdInscripcion)
 
+			Select @TotalPago = IsNull(Sum(Importe), 0)
+			from Pagos P
+				Inner Join Inscripciones Insc
+				on Insc.ID = P.IDInscripcion
+				Where P.IDInscripcion = @IdInscripcion
+
+			if @TotalPago < @CostoInscripcion
+			BEGIN
+				RAISERROR('El usuario no pagó el total de la inscripción', 16,1)
+			END
+
+		COMMIT 
+	End Try
+
+	BEGIN CATCH
+		ROLLBACK
+		Declare @ErrorMsg varchar(4000)
+		Set @ErrorMsg = 'Ocurrió un error al registrar la certificación: ' + ERROR_MESSAGE()
+		RAISERROR(@ErrorMsg, 16,1)
+	END CATCH
+END
+GO
+
+-- Tests
+--------------------------------------------------------------------------
+Select * from Inscripciones where ID = 1
+Select * from Certificaciones where IDInscripcion = 1
+Select * from Cursos Where Id = 1
+
+Select Insc.Id IdInscripcion, Insc.Costo, SUM(Importe) TotalPago
+from Inscripciones Insc
+	inner join Pagos P
+	on P.IDInscripcion = insc.ID
+Group By Insc.Id, Insc.Costo
+Having Insc.Costo <> SUM(Importe)
+
+Update Inscripciones Set Costo = 14000 Where Id = 1
+
+Delete from Certificaciones Where IDInscripcion = 1
+
+Insert into Certificaciones Values (1, GETDATE(), (select CostoCertificacion
+												   from Cursos C
+												   inner join Inscripciones Insc
+												   on Insc.IdCurso = C.Id
+												   Where Insc.Id = 1))
+
+Select * from Certificaciones
+GO
+-----------------------------------------------------------------------
+
+-- 4 Hacer un trigger que al eliminar una reseña no la elimine permanentemente
+-- sino que la marque como inapropiada.
+
+Create or Alter TRIGGER tr_Eliminar_Reseña
+on Reseñas instead of delete
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+			Declare @IdInscripcion bigint = (Select IdInscripcion from deleted)
+
+			Update Reseñas
+				Set Inapropiada = 1
+			Where IDInscripcion = @IdInscripcion
+		COMMIT
+	END TRY
+
+	BEGIN CATCH
+		ROLLBACK
+		Declare @ErrorMsg varchar(4000)
+		Set @ErrorMsg = 'Ocurrió un error al eliminar la reseña: ' + ERROR_MESSAGE()
+		RAISERROR(@ErrorMsg, 16,1)	
+	END CATCH
+END
+GO
+
+-- Test
+Update Reseñas Set Inapropiada = 0 Where IDInscripcion = 5
+Select * from Reseñas Where IDInscripcion = 5
+Delete from Reseñas Where IDInscripcion = 5
+Select * from Reseñas Where IDInscripcion = 5
+Go
+
+-- 5 Hacer un trigger que al ingresar un pago verifique que el usuario no esté
+-- abonando, en total, más dinero que el costo total de la inscripción que
+-- está abonando. Es decir, si la inscripción tiene un costo de $10000 y el
+-- usuario está abonando un pago de $5000 el trigger debe validar que dichos
+-- $5000 más todos los pagos realizados para esa inscripción no superen los
+-- $10000.
+--
+-- En caso de superar el importe indicarlo con un mensaje aclaratorio y no
+-- permitir el pago, de lo contrario, registrar el pago.
+
+Create or Alter TRIGGER tr_Ingresar_Pago
+on Pagos after INSERT
+AS
+BEGIN
+	Begin Try
+		Begin Tran
+		Declare @IdInscripcion bigint = (Select IdInscripcion from inserted)
+		Declare @CostoInscripcion money
+		Declare @TotalPagos money
+
+		-- Obtener el total de pagos (incluye esta ultima insersión)
+		Select @TotalPagos = IsNull(SUM(Importe),0)
+		from Pagos
+		Where IDInscripcion = @IdInscripcion
+
+		-- Obtener costo de inscripcion
+		Select @CostoInscripcion = Costo from Inscripciones
+		Where Id = @IdInscripcion
+
+		-- No hace falta sumar el importe porque ya está incluido (por ser after insert)
+		if (@TotalPagos) > @CostoInscripcion
+		BEGIN
+			RAISERROR('Está intentando pagar más de lo adeudado', 16, 1)
+		END
+
+		Commit
+	End Try
+
+	Begin Catch
+		ROLLBACK -- No permitir el insert
+		Declare @ErrorMsg varchar(4000)
+		Set @ErrorMsg = 'Ocurrió un error al registrar el pago: ' + ERROR_MESSAGE()
+		RAISERROR(@ErrorMsg, 16,1)		
+	End Catch
+END
+GO
+
+-- Alternativa Instead of
+Create or Alter TRIGGER tr_Ingresar_Pago
+on Pagos instead of INSERT
+AS
+BEGIN
+	Begin Try
+		Begin Tran
+		Declare @IdInscripcion bigint = (Select IdInscripcion from inserted)
+		Declare @Importe money = (Select Importe from Inserted)
+		Declare @CostoInscripcion money
+		Declare @TotalPagos money
+
+		-- Obtener el total de pagos
+		Select @TotalPagos = IsNull(SUM(Importe),0)
+		from Pagos
+		Where IDInscripcion = @IdInscripcion
+
+		-- Obtener costo de inscripcion
+		Select @CostoInscripcion = Costo from Inscripciones
+		Where Id = @IdInscripcion
+
+		if (@TotalPagos + @Importe) > @CostoInscripcion
+		BEGIN
+			RAISERROR('Está intentando pagar más de lo adeudado', 16, 1)
+		END
+
+		Insert into Pagos
+		Values (@IdInscripcion,
+				(Select Fecha from Inserted),
+				@Importe)
+
+		Commit
+	End Try
+
+	Begin Catch
+		ROLLBACK
+		Declare @ErrorMsg varchar(4000)
+		Set @ErrorMsg = 'Ocurrió un error al registrar el pago: ' + ERROR_MESSAGE()
+		RAISERROR(@ErrorMsg, 16,1)		
+	End Catch
+END
+GO
+
+-- Tests
+Select SUM(Importe) from Pagos Where IDInscripcion = 2
+
+Select * from Inscripciones where Id = 2
+
+Insert into Pagos (IDInscripcion, Fecha, Importe)
+Values (2, getdate(), 10000)
+
+Select * from pagos order by fecha desc
